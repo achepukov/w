@@ -1,14 +1,17 @@
 import express from "express";
-import path from "path";
+import bodyParser from "body-parser";
+import postsRouter from './routes/posts';
+
 const app = express();
-const port = 8080; // default port to listen
+const { PORT } = process.env;
 
 app.get( "/", ( req, res ) => {
-    // render the index template
-    res.send('wisdo test task');
-} );
+    res.send('API');
+});
 
-app.listen( port, () => {
-    // tslint:disable-next-line:no-console
-    console.log( `server started at http://localhost:${ port }` );
+app.use(bodyParser.json())
+app.use('/posts', postsRouter);
+
+app.listen( PORT, () => {
+    console.log( `server started at http://localhost:${ PORT }` );
 } );

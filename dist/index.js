@@ -4,14 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const posts_1 = __importDefault(require("./routes/posts"));
 const app = express_1.default();
-const port = 8080; // default port to listen
+const { PORT } = process.env;
 app.get("/", (req, res) => {
-    // render the index template
-    res.send('wisdo test task');
+    res.send('API');
 });
-app.listen(port, () => {
-    // tslint:disable-next-line:no-console
-    console.log(`server started at http://localhost:${port}`);
+app.use(body_parser_1.default.json());
+app.use('/posts', posts_1.default);
+app.listen(PORT, () => {
+    console.log(`server started at http://localhost:${PORT}`);
 });
 //# sourceMappingURL=index.js.map
