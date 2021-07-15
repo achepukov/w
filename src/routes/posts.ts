@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
   const { id } = req.params;
-  const post = await Post.findOne({ where: { id }});
+  const post = await Post.findByPk(id);
   if (post) {
     res.send(post);
   } else {
@@ -31,7 +31,7 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   const { id } = req.params;
-  const post = await Post.findOne({ where: { id }});
+  const post = await Post.findByPk(id);
   if (post) {
     const updated = await post.update({
       ...req.body,
