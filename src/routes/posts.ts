@@ -7,10 +7,40 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const post = Post.create(req.body)
-    .then(createdPost => {
+  Post.create(req.body)
+    .then(created => {
       res.status(201);
-      res.send(createdPost);
+      res.send(created);
+    })
+    .catch(err => {
+      res.status(400);
+      res.send(err);
+    })
+});
+
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params;
+  Post.upsert({
+      ...req.body,
+      id,
+    })
+    .then(updated => {
+      res.status(200);
+      res.send(updated);
+    })
+    .catch(err => {
+      res.status(400);
+      res.send(err);
+    })
+});
+
+router.delete('/:id', (req, res, next) => {
+  const { id } = req.params;
+  Post.destroy({
+    where: { id }
+  })
+    .then(() => {
+      res.status(204);
     })
     .catch(err => {
       res.status(400);
