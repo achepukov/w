@@ -10,50 +10,49 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   const { id } = req.params;
   const post = await Post.findOne({ where: { id }});
-  res.send(post);
+  if (post) {
+    res.send(post);
+  } else {
+    next({
+      statusCode: 404
+    });
+  }
 });
 
-router.post('/', (req, res, next) => {
-  Post.create(req.body)
-    .then(created => {
-      res.status(201);
-      res.send(created);
-    })
-    .catch(err => {
-      res.status(400);
-      res.send(err);
-    })
+router.post('/', async (req, res, next) => {
+  try {
+    const created = await Post.create(req.body);
+    res.status(201);
+    res.send(created);
+  } catch(e) {
+    next(e);
+  }
 });
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   const { id } = req.params;
-  Post.upsert({
+  try {
+    const [updated] = await Post.upsert({
       ...req.body,
       id,
-    })
-    .then(([updated]) => {
-      res.status(200);
-      res.send(updated);
-    })
-    .catch(err => {
-      res.status(400);
-      res.send(err);
-    })
+    });
+    res.status(200);
+    res.send(updated);
+  } catch (e) {
+    next(e);
+  }
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   const { id } = req.params;
-  Post.destroy({
-    where: { id }
-  })
-    .then(() => {
-      res.send('');
-      res.status(204);
-    })
-    .catch(err => {
-      res.status(400);
-      res.send(err);
-    })
+  const post = await Post.findOne({ where: { id } });
+  if (post) {
+    await post.destroy();
+    res.send('');
+    res.status(204);
+  } else {
+    next({ statusCode: 404 })
+  }
 });
 
 export default router;
