@@ -2,8 +2,15 @@ import express from 'express';
 import { Post } from '../db/models/Post';
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.send('posts!')
+router.get('/', async (req, res, next) => {
+  const posts = await Post.findAll();
+  res.send(posts);
+});
+
+router.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const post = await Post.findOne({ where: { id }});
+  res.send(post);
 });
 
 router.post('/', (req, res, next) => {
@@ -24,7 +31,7 @@ router.put('/:id', (req, res, next) => {
       ...req.body,
       id,
     })
-    .then(updated => {
+    .then(([updated]) => {
       res.status(200);
       res.send(updated);
     })
