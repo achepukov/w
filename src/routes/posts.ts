@@ -47,6 +47,7 @@ router.delete('/:id', (req, res, next) => {
     where: { id }
   })
     .then(() => {
+      res.send('');
       res.status(204);
     })
     .catch(err => {
