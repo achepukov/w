@@ -31,15 +31,17 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:id', async (req, res, next) => {
   const { id } = req.params;
-  try {
-    const [updated] = await Post.upsert({
+  const post = await Post.findOne({ where: { id }});
+  if (post) {
+    const updated = await post.update({
       ...req.body,
       id,
     });
-    res.status(200);
     res.send(updated);
-  } catch (e) {
-    next(e);
+  } else {
+    next({
+      statusCode: 404
+    });
   }
 });
 
