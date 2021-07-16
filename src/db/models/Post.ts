@@ -2,15 +2,29 @@ import { DataTypes } from 'sequelize';
 import sequelize from './instance';
 
 export const Post = sequelize.define('Post', {
-  Title: {
+  title: {
     type: DataTypes.STRING(60),
     allowNull: false
   },
-  Summary: {
-    type: DataTypes.TEXT
+  summary: {
+    type: DataTypes.TEXT,
+    allowNull: false
   },
-  Body: {
-    type: DataTypes.TEXT
+  body: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },
+  image: {
+    type: DataTypes.STRING(2048),
+    allowNull: true
+  },
+  likes: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  status: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true
   },
 });
 
